@@ -1,3 +1,4 @@
+
 require_relative '../../config/environment'
 
 class ApplicationController < Sinatra::Base
@@ -7,50 +8,47 @@ class ApplicationController < Sinatra::Base
     set :views, 'app/views'
   end
 
-  # create a post
+#create
   get '/posts/new' do
     erb :new
   end
 
-  # create a post
   post '/posts' do
-    @post = Post.create(params)
-    # redirect to '/posts'
+    @posts = Post.create(params)
     erb :index
   end
 
-  # read a post
+#read
   get '/posts' do
     @posts = Post.all
     erb :index
   end
 
   get '/posts/:id' do
-    id = params[:id]
-    @post = Post.all.find_by_id(id)
+    @post = Post.find_by_id(params[:id])
     erb :show
   end
 
-  # update a post
+#update
   get '/posts/:id/edit' do
-    id = params[:id]
-    @post = Post.all.find_by_id(id)
+    @post = Post.find_by_id(params[:id])
     erb :edit
   end
 
   patch '/posts/:id' do
     @post = Post.find_by_id(params[:id])
-    # binding.pry
-    @post.update(content: params[@post.content], name: params[@post.name])
+    @post.name = params[:name]
+    @post.content = params[:content]
+    @post.save
     erb :show
   end
 
-    delete '/posts/:id/delete' do
-      @post = Post.find_by_id(params[:id]).delete
-      erb :delete
-    end
-
-
+#delete
+  delete '/posts/:id/delete' do
+    @post = Post.find_by_id(params[:id])
+    @post.delete
+    erb :delete
+  end
 
   # get '/' do
   #   # Post.all
